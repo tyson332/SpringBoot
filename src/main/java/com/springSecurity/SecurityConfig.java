@@ -21,10 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 			.inMemoryAuthentication()
-			.withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
-//			.withUser("admin").password("admin").roles("ADMIN")
-			.and()
-			.withUser("user").password(passwordEncoder().encode("user")).roles("USER");
+			.withUser("admin1").password(passwordEncoder().encode("admin")).roles("ADMIN").and()
+			.withUser("admin2").password(passwordEncoder().encode("admin")).roles("ADMIN").authorities("MANAGER").and()
+			.withUser("user1").password(passwordEncoder().encode("user")).roles("USER")
+			.withUser("user2").password(passwordEncoder().encode("user")).roles("USER").authorities("TEAM_LEAD");
+//			.withUser("admin").password("admin").roles("ADMIN").and()
 //			.withUser("user").password("user").roles("USER");
 	}
 
@@ -34,9 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 			.antMatchers("/").permitAll()//bypass authetication and authorization
 			.antMatchers("/profile").authenticated()//Authentication only required
-			.antMatchers("/user").hasRole("USER")//Authetication and Authorization required
-			.antMatchers("/admin").hasRole("ADMIN")//Authetication and Authorization required
+			.antMatchers("/user/**").hasRole("USER")//Authetication and Authorization required
+			.antMatchers("/admin/**").hasRole("ADMIN")//Authetication and Authorization required
 			.antMatchers("/useroradmin").hasAnyRole("ADMIN","USER")//Either admin or user role required
+			//permissions
+			.antMatchers("/listTeam").hasAuthority("TEAM_LEAD")//Authetication, Authorization (since /user/** is required) and permission required
+			.antMatchers("/listEmp").hasAuthority("MANAGER")//Authetication, Authorization and permission required
+			.antMatchers("/**").denyAll()
 			.and()
 			.httpBasic();
 		http

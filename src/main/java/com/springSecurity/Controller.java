@@ -1,9 +1,10 @@
 package com.springSecurity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,5 +57,24 @@ public class Controller {
 		return "Hello User or Admin Role";
 	}
 	
+	@GetMapping("/listTeam")
+	public List<String> listTeam() {
+		List<String> list = new ArrayList();
+		list.add("Team Memeber 1");
+		list.add("Team Memeber 2");
+		list.add("Team Memeber 3");
+		return list;
+	}
+	
+	@GetMapping("/listEmp")
+	public List<String> listEmp() {
+		List<String> list = new ArrayList();
+		list.add("Team Memeber 1");
+		list.add("Team Memeber 2");
+		list.add("Team Memeber 3");
+		list.add("Team Lead 1");
+		list.add("Team Lead 2");
+		return list;
+	}
 
 }
