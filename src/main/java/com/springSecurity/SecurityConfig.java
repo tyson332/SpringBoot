@@ -7,7 +7,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -30,9 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-			.anyRequest().authenticated()
+			.antMatchers("/").permitAll()//bypass authetication and authorization
+			.antMatchers("/profile").authenticated()//Authentication only required
+			.antMatchers("/user").hasRole("USER")//Authetication and Authorization required
+			.antMatchers("/admin").hasRole("ADMIN")//Authetication and Authorization required
+			.antMatchers("/useroradmin").hasAnyRole("ADMIN","USER")//Either admin or user role required
 			.and()
 			.httpBasic();
+		http
+			.sessionManagement() 
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
 	@Bean

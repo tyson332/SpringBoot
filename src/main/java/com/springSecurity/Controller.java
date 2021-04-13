@@ -10,22 +10,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 	
-	@Autowired
-	JdbcTemplate jdbcTemplate;
+	/**
+	 * Accessable without Authentication and authorization
+	 * @return
+	 */
+	@GetMapping("/")
+	public String getWelcomePage() {
+		return "Hello....welcome to our website";
+	}
 	
+	/**
+	 * All logged in users
+	 * Accessable with authentication but authorization not required
+	 * @return
+	 */
+	@GetMapping("/profile")
+	public String getProfile() {
+		return "Welcome to profile page";
+	}
+	
+	/**
+	 * Only logged in user with role USER can access this
+	 * @return
+	 */
 	@GetMapping("/user")
 	public String getUser() {
-		return "Hello User";
+		return "Hello User Role";
 	}
 	
+	/**
+	 * Only loggged in admin can access this
+	 * @return
+	 */
 	@GetMapping("/admin")
 	public String getAdmin() {
-		return "Hello Admin";
+		return "Hello Admin Role";
 	}
 	
-	@GetMapping("/empList")
-	public List<String> getEmpList(){
-		List<String>data=jdbcTemplate.queryForList("select emp_name from emp1",String.class);
-		return data;
+	/**
+	 * Either User or Admin
+	 * @return
+	 */
+	@GetMapping("/useroradmin")
+	public String getUserOrAdmin() {
+		return "Hello User or Admin Role";
 	}
+	
+
 }
